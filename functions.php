@@ -1,8 +1,8 @@
 <?php
 $config = array();
-$config["server_rcon"] = "renebplayground";
+$config["server_rcon"] = "XXXXX";
 $config["ip"] = "94.23.252.24";
-$config["port"] = 28017;
+$config["port"] = XXXXX;
 try
 {
     $conn = @fsockopen($config["ip"],$config["port"], $errno, $errstr, 2);
