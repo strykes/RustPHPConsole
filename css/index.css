@@ -1,0 +1,12 @@
+.console {
+    width:800px;
+    height:300px;
+    overflow:scroll;
+    font-family: "Courier New", Courier, monospace;
+}
+.command {
+    width:800px;
+    height:20px;
+    overflow:hidden;
+    font-family: "Courier New", Courier, monospace;
+}
