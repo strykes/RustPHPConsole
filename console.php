@@ -9,28 +9,10 @@ for ( $i = 0; $i < 50; $i++ )
 	doflush();
 }
 
-$data = pack("VV",1,03).$config["server_rcon"].chr(0).''.chr(0);
-$data = pack("V",strlen($data)).$data;
-fwrite($conn, $data, strlen($data));
-$started = false;
+auth($conn);
+
 while ($conn > 0)  {
-    /*while($size = @fread($conn, 4))
-    {
-    	if(strlen($size)>=4)
-    	{
-       		$size = unpack('V1Size',$size);
-      		if ($size["Size"] > 4096) {
-            	$packet = "\x00\x00\x00\x00\x00\x00\x00\x00".fread($conn,4096);
-        	} 
-        	else {
-            	$packet = fread($conn,$size["Size"]);
-        	}
-        	print("<script type=\"text/javascript\">parent.addstuff(\"console\",\"".addslashes($packet)."\");</script>");
-        	doflush();
-        }
-    }*/
 	$size = @fread($conn, 4);
-	
 	
     if(strlen($size)>=4)
     	$size = unpack('V1Size',$size);
@@ -41,16 +23,12 @@ while ($conn > 0)  {
       	elseif ($size["Size"]>0)
         	$packet = fread($conn, $size["Size"]);
     }
+    print('<script type="text/javascript">parent.addstuff("console","'.addslashes(clean($packet)).'");</script>');
 
-    print("<script type=\"text/javascript\">parent.addstuff(\"console\",\"".addslashes($packet)."\");</script>");
-  	if(!$started)
-  	{
-  		sendcmd($conn, "status");
-  		$started = true;
-  	}
     $packet = false;
     doflush();
 }
+
 function doflush() {
     print str_pad('', intval(ini_get('output_buffering')))."\n";
     flush();
