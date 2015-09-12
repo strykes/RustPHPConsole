@@ -1,9 +1,7 @@
-<html>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <?php
 header('Content-Type: text/html; charset=UTF-8');
-include("functions.php");
+include( "includes/functions.php");
 
 for ( $i = 0; $i < 50; $i++ )
 {
@@ -11,37 +9,45 @@ for ( $i = 0; $i < 50; $i++ )
 	doflush();
 }
 
-$started = false;
 $data = pack("VV",1,03).$config["server_rcon"].chr(0).''.chr(0);
 $data = pack("V",strlen($data)).$data;
 fwrite($conn, $data, strlen($data));
-
+$started = false;
 while ($conn > 0)  {
-    $size = fread($conn, 4);
-    if(connection_aborted())
+    /*while($size = @fread($conn, 4))
     {
-        echo "disconnected";
-        ob_flush();
-        flush();
-        break;
-    }
+    	if(strlen($size)>=4)
+    	{
+       		$size = unpack('V1Size',$size);
+      		if ($size["Size"] > 4096) {
+            	$packet = "\x00\x00\x00\x00\x00\x00\x00\x00".fread($conn,4096);
+        	} 
+        	else {
+            	$packet = fread($conn,$size["Size"]);
+        	}
+        	print("<script type=\"text/javascript\">parent.addstuff(\"console\",\"".addslashes($packet)."\");</script>");
+        	doflush();
+        }
+    }*/
+	$size = @fread($conn, 4);
+	
+	
     if(strlen($size)>=4)
-      $size = unpack('V1Size',$size);
+    	$size = unpack('V1Size',$size);
     if(isset($size) && isset($size["Size"]))
     {
-      if ($size["Size"] > 4096)
-        $packet = "\x00\x00\x00\x00\x00\x00\x00\x00".fread($conn, 4096);
-      elseif ($size["Size"]>0)
-        $packet = fread($conn, $size["Size"]);
+    	if ($size["Size"] > 4096)
+     		$packet = "\x00\x00\x00\x00\x00\x00\x00\x00".fread($conn, 4096);
+      	elseif ($size["Size"]>0)
+        	$packet = fread($conn, $size["Size"]);
     }
-    
+
     print("<script type=\"text/javascript\">parent.addstuff(\"console\",\"".addslashes($packet)."\");</script>");
-    if(!$started)
-    {
-        sendcmd($conn, "status");
-        $started = true;
-    }
-  
+  	if(!$started)
+  	{
+  		sendcmd($conn, "status");
+  		$started = true;
+  	}
     $packet = false;
     doflush();
 }
