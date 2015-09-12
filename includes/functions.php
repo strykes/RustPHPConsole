@@ -13,7 +13,9 @@ function sendcmd($conn, $cmd)
     $data = pack("V",strlen($data)).$data;
     fwrite($conn, $data, strlen($data));
 }
-
+function clean($text) {
+	return rtrim(str_replace(array("\n","\b","\r"),array("<br>","",""),$text));
+}
 function auth($conn)
 {
 	global $config;
