@@ -33,4 +33,4 @@ function doflush() {
     print str_pad('', intval(ini_get('output_buffering')))."\n";
     flush();
 }
-?> </div> 
+?>
